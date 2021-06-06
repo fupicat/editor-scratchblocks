@@ -1,0 +1,1 @@
+Por enquanto só um monte de coisa desconexa, não dá para usar.
