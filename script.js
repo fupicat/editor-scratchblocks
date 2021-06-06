@@ -48,11 +48,9 @@ const test = [
 ];
 
 document.querySelector("pre.blocks").textContent = toScratchBlocks(test);
-console.log(toScratchBlocks(test));
-scratchblocks.renderMatching('pre.blocks', {
-  style:     'scratch2',   // Optional, defaults to 'scratch2'.
-  languages: ['en'], // Optional, defaults to ['en'].
-});
+scratchblocks.renderMatching('pre.blocks');
+
+toHTML(test, document.querySelector(".edit"));
 
 function toScratchBlocks(blocks, isInsert) {
   let final = "";
@@ -134,4 +132,102 @@ function toScratchBlocks(blocks, isInsert) {
   final = final.replaceAll("  ", " ");
 
   return final;
+}
+
+function toHTML(blocks, parent, isInsert, textArr) {
+  console.log("==========");
+  console.log(JSON.stringify(blocks));
+
+  let skipNext = 0;
+  let unstyledLoops = []
+
+  blocks.forEach((item, index) => {
+    if (skipNext > 0) {
+      skipNext -= 1;
+      return;
+    }
+    let node = document.createElement("div");
+
+    // Adicione o texto ao bloco
+    if (item.text !== null) {
+      let myText = item.text;
+
+      // Adicione um triangulinho se o input for
+      // de tipo select
+      if (item.input && item.input.includes("select")) {
+        myText += " ▾";
+      }
+
+      myText = myText.split("$");
+
+      // Se há outros blocos inseridos nesse,
+      // converta-os e substitua os símbolos $
+      if (item.inserts) {
+        toHTML(item.inserts, node, true, myText);
+        node.insertAdjacentText("beforeend", myText[myText.length - 1]);
+      } else {
+        node.textContent = myText;
+      }
+    }
+
+    // Adicione as configurações de estilo
+    if (item.config) {
+      node.className = "block " + item.config;
+    }
+
+    if (item.input) {
+      node.className = "input " + item.config;
+    }
+
+    // Deixe o bloco arredondado se precisar
+    if (item.input && item.input.includes("number")) {
+      node.className += " number";
+    }
+
+    // Se o bloco estiver inserido em outro, adicione
+    // a classe inline
+    if (isInsert) {
+      node.className += " inline";
+    }
+
+    // Adicione próximos como filhos se for um loop
+    if (item.loop) {
+      switch (item.loop) {
+        case "start":
+        case "middle":
+          unstyledLoops.push(node);
+          let children = [];
+          for (let i = index + 1; i < blocks.length; i++) {
+            if (blocks[i].loop) {
+              if (blocks[i].loop != "start") {
+                break;
+              }
+            }
+            children.push(blocks[i]);
+            skipNext += 1;
+          }
+          toHTML(children, node);
+          break;
+        case "end":
+          unstyledLoops.forEach((x, y) => {
+            if (item.config) {
+              x.className = "block " + item.config;
+            }
+            if (y == unstyledLoops.length - 1) {
+              if (item.text) {
+                x.appendChild(document.createTextNode(item.text));
+              }
+            }
+          });
+          return;
+      }
+    }
+
+    // Se há texto para ser adicionado antes desse
+    // elemento, adicione-o.
+    if (textArr && textArr.length > index) {
+      parent.appendChild(document.createTextNode(textArr[index]));
+    }
+    parent.appendChild(node);
+  });
 }
