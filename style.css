@@ -1,0 +1,80 @@
+div {
+  font: 500 10pt Helvetica Neue, Helvetica, sans-serif;
+  color: black;
+  padding: 3px 0px 3px 6px;
+  border: 2px solid;
+}
+
+/* Colors */
+
+.motion {
+  background: #4c97ff;
+  border-color: #3373cc;
+}
+
+.looks {
+  background: #9966ff;
+  border-color: #774dcb;
+}
+
+.sounds {
+  background: #cf63cf;
+  border-color: #bd42bd;
+}
+
+.events {
+  background: #ffbf00;
+  border-color: #cc9900;
+}
+
+.control {
+  background: #ffab19;
+  border-color: #cf8b17;
+}
+
+.sensing {
+  background: #5cb1d6;
+  border-color: #2e8eb8;
+}
+
+.operators {
+  background: #59c059;
+  border-color: #389438;
+}
+
+.variables {
+  background: #ff8c1a;
+  border-color: #db6e00;
+}
+
+.lists {
+  background: #ff661a;
+  border-color: #e64d00;
+}
+
+.custom {
+  background: #ff6680;
+  border-color: #ff3355;
+}
+
+.extension {
+  background: #0fbd8c;
+  border-color: #0b8e69;
+}
+
+/* Classes */
+
+.inline {
+  display: inline-block;
+  padding: 5px;
+}
+
+.input {
+  padding: 0px 5px;
+  background: white;
+  border: solid gray 2px;
+}
+
+.number, .reporter {
+  border-radius: 25px;
+}
